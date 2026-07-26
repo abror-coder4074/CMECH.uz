@@ -103,8 +103,8 @@ const ShowroomSection = () => {
                   <span className="block text-[10px] uppercase font-mono tracking-wider text-[#9E978E] mb-1">
                     {lang === 'uz' ? 'Telefon' : lang === 'ru' ? 'Телефон' : 'Phone'}
                   </span>
-                  <a href="tel:+998712077777" className="text-sm font-bold text-white hover:text-[#E1931E] transition">
-                    +998 (71) 207-77-77
+                  <a href="tel:+998502070000" className="text-sm font-bold text-white hover:text-[#E1931E] transition">
+                    +998 (50) 207-00-00
                   </a>
                 </div>
               </div>

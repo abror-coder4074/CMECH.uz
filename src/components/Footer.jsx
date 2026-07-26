@@ -10,8 +10,8 @@ const Footer = () => {
   const year = new Date().getFullYear();
 
   // Social linklarni shu yerdan o'zgartirishingiz mumkin:
-  const telegramLink = "https://t.me/cmech_uz"; // Telegram kanalingiz manzili
-  const instagramLink = "https://instagram.com/cmech_uz"; // Instagram sahifangiz manzili
+  const telegramLink = "https://t.me/+3AB_5uA6v1c1ZDBi"; // Telegram kanalingiz manzili
+  const instagramLink = "https://www.instagram.com/cmech_uz?utm_source=qr"; // Instagram sahifangiz manzili
 
   return (
     <footer className="relative bg-[#0D0A08] text-[#E2D8CE] border-t border-[#E1931E]/20 pt-20 pb-10 overflow-hidden">

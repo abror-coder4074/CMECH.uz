@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 
 const PhilosophySection = () => {
   const { lang, t } = useLanguage();
   const [activeTab, setActiveTab] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
   // Falsafa slaydlari va ularning har biriga mos luxury vizual rasmlar
   const slides = [
@@ -39,7 +40,7 @@ const PhilosophySection = () => {
         en: "Ideal Microclimate"
       },
       desc: {
-        uz: "Tashqaridagi -20°C sovuq yoki +45°C jazlama issiq xonangiz halovatiga ta'sir qila olmaydi. Nemis Thermo-Break texnologiyasi energiyani maksimal tejaydi.",
+        uz: "Tashqaridagi -20°C sovuq yoki +45°C jazlama issiq xonangiz halovatiga ta'sir qila olmaydi. Yevropa Thermo-Break texnologiyasi energiyani maksimal tejaydi.",
         ru: "Мороз -20°C или зной +45°C не нарушат уют вашего дома. Технология Thermo-Break обеспечивает максимальное энергосбережение.",
         en: "Extreme temperatures outside stay outside. High-tech Thermo-Break barriers guarantee peak energy efficiency year-round."
       },
@@ -66,11 +67,21 @@ const PhilosophySection = () => {
     }
   ];
 
+  // Auto-play interval (sichqoncha ustida bo'lmasa 5s da o'zgaradi)
+  useEffect(() => {
+    if (isHovered) return;
+    const interval = setInterval(() => {
+      setActiveTab((prev) => (prev + 1) % slides.length);
+    }, 5500);
+    return () => clearInterval(interval);
+  }, [isHovered, slides.length]);
+
   return (
-    <section id="philosophy" className="relative py-28 bg-[var(--color-cmech-dark)] text-[var(--color-cmech-text)] border-t border-[var(--color-cmech-gold)]/10 overflow-hidden">
+    <section id="philosophy" className="relative py-28 bg-[var(--color-cmech-dark)] text-[var(--color-cmech-text)] border-t border-[var(--color-cmech-gold)]/10 overflow-hidden selection:bg-[var(--color-cmech-gold)] selection:text-[var(--color-cmech-dark)]">
       
-      {/* GLOW DECORATION */}
-      <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-[var(--color-cmech-gold)]/5 rounded-full blur-[150px] pointer-events-none" />
+      {/* GLOW DECORATIONS */}
+      <div className="absolute top-1/3 right-0 w-[600px] h-[600px] bg-[var(--color-cmech-gold)]/5 rounded-full blur-[180px] pointer-events-none animate-pulse duration-10000" />
+      <div className="absolute bottom-10 left-0 w-[400px] h-[400px] bg-[var(--color-cmech-gold)]/5 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         
@@ -79,48 +90,55 @@ const PhilosophySection = () => {
           <div>
             <div className="inline-flex items-center space-x-3 mb-4">
               <span className="h-[1px] w-8 bg-[var(--color-cmech-gold)]"></span>
-              <span className="text-xs uppercase tracking-[0.3em] text-[var(--color-cmech-gold)] font-medium">
-                {t.philosophy.tag}
+              <span className="text-xs uppercase tracking-[0.3em] text-[var(--color-cmech-gold)] font-semibold">
+                {t.philosophy?.tag || "PHILOSOPHY OF SPACE"}
               </span>
             </div>
             <h2 className="font-serif text-3xl sm:text-5xl font-normal text-white tracking-wide leading-tight">
-              {t.philosophy.title} <br />
-              <span className="italic font-light text-[var(--color-cmech-gold)]">{t.philosophy.subtitle}</span>
+              {t.philosophy?.title || "Falsafamiz"} <br />
+              <span className="italic font-light text-[var(--color-cmech-gold)] drop-shadow-[0_4px_15px_rgba(225,147,30,0.2)]">
+                {t.philosophy?.subtitle || "Mukammallik sari"}
+              </span>
             </h2>
           </div>
 
-          <div className="text-xs text-[var(--color-cmech-text)]/50 tracking-widest uppercase font-mono">
-            [ 0{activeTab + 1} / 03 ]
+          {/* DYNAMIC COUNTER */}
+          <div className="text-xs text-[var(--color-cmech-gold)] font-mono tracking-widest uppercase bg-white/5 border border-[var(--color-cmech-gold)]/20 px-4 py-2 rounded-full self-start md:self-auto backdrop-blur-md">
+            [ <span className="font-bold text-white">0{activeTab + 1}</span> / 03 ]
           </div>
         </div>
 
         {/* INTERACTIVE SPLIT SHOWCASE */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch mb-24">
+        <div 
+          className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch mb-24"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
           
           {/* LEFT: HIGH-END DYNAMIC IMAGE DISPLAY (7 COLS) */}
-          <div className="lg:col-span-7 relative min-h-[400px] sm:min-h-[500px] rounded-sm overflow-hidden border border-[var(--color-cmech-gold)]/20 shadow-2xl group">
+          <div className="lg:col-span-7 relative min-h-[420px] sm:min-h-[520px] rounded-lg overflow-hidden border border-[var(--color-cmech-gold)]/30 shadow-[0_20px_50px_rgba(0,0,0,0.8)] group">
             
             {slides.map((slide, idx) => (
               <div 
                 key={slide.id}
-                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                  activeTab === idx ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
+                  activeTab === idx ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-105 pointer-events-none z-0'
                 }`}
               >
                 <img 
                   src={slide.image} 
                   alt={slide.title[lang]} 
-                  className="w-full h-full object-cover object-center scale-105 group-hover:scale-100 transition-transform duration-1000"
+                  className="w-full h-full object-cover object-center transition-transform duration-1000 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-cmech-dark)] via-transparent to-black/30" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-cmech-dark)] via-[var(--color-cmech-dark)]/20 to-black/30" />
                 
                 {/* CAPTION BADGE */}
-                <div className="absolute bottom-8 left-8 right-8 z-20 flex justify-between items-end">
-                  <div className="bg-[var(--color-cmech-dark)]/80 backdrop-blur-md border border-[var(--color-cmech-gold)]/30 p-5 rounded-sm max-w-sm">
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--color-cmech-gold)] font-semibold block mb-1">
+                <div className="absolute bottom-8 left-6 right-6 sm:left-8 sm:right-8 z-20 flex justify-between items-end">
+                  <div className="bg-[var(--color-cmech-dark)]/85 backdrop-blur-xl border border-[var(--color-cmech-gold)]/40 p-6 rounded-lg max-w-sm shadow-2xl transform transition-transform duration-500 group-hover:-translate-y-1">
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--color-cmech-gold)] font-bold block mb-1">
                       {slide.subtitle[lang]}
                     </span>
-                    <h4 className="font-serif text-lg text-white font-normal">
+                    <h4 className="font-serif text-xl text-white font-normal">
                       {slide.title[lang]}
                     </h4>
                   </div>
@@ -138,32 +156,44 @@ const PhilosophySection = () => {
                 <div
                   key={slide.id}
                   onClick={() => setActiveTab(idx)}
-                  className={`p-7 rounded-sm border transition-all duration-500 cursor-pointer ${
+                  className={`relative overflow-hidden p-6 sm:p-7 rounded-lg border transition-all duration-500 cursor-pointer ${
                     isActive 
-                      ? 'bg-white/[0.03] border-[var(--color-cmech-gold)] shadow-xl translate-x-2' 
+                      ? 'bg-gradient-to-r from-white/[0.06] to-white/[0.02] border-[var(--color-cmech-gold)] shadow-[0_10px_30px_rgba(225,147,30,0.15)] translate-x-2' 
                       : 'bg-transparent border-white/5 hover:border-[var(--color-cmech-gold)]/30 opacity-60 hover:opacity-100'
                   }`}
                 >
+                  {/* PROGRESS BAR FOR ACTIVE TAB */}
+                  {isActive && !isHovered && (
+                    <div className="absolute bottom-0 left-0 h-[2px] bg-[var(--color-cmech-gold)] animate-progress" />
+                  )}
+
                   <div className="flex items-center justify-between mb-3">
                     <span className={`font-serif text-xl ${isActive ? 'text-[var(--color-cmech-gold)] font-bold' : 'text-white/40'}`}>
                       {slide.id}
                     </span>
-                    <span className={`text-[10px] uppercase tracking-[0.2em] px-3 py-1 rounded-full border ${
-                      isActive ? 'border-[var(--color-cmech-gold)]/40 text-[var(--color-cmech-gold)]' : 'border-white/10 text-white/40'
+                    <span className={`text-[10px] uppercase tracking-[0.2em] px-3.5 py-1 rounded-full border transition-all duration-300 ${
+                      isActive ? 'border-[var(--color-cmech-gold)] bg-[var(--color-cmech-gold)]/10 text-[var(--color-cmech-gold)] font-semibold' : 'border-white/10 text-white/40'
                     }`}>
                       {isActive ? 'Active' : 'Select'}
                     </span>
                   </div>
 
-                  <h3 className="font-serif text-xl text-white mb-2 tracking-wide">
+                  <h3 className="font-serif text-xl text-white tracking-wide">
                     {slide.title[lang]}
                   </h3>
 
-                  <p className={`text-xs leading-relaxed font-light transition-all duration-300 ${
-                    isActive ? 'text-[var(--color-cmech-text)]/80 max-h-40 mt-3 opacity-100' : 'text-transparent max-h-0 opacity-0 overflow-hidden'
-                  }`}>
-                    {slide.desc[lang]}
-                  </p>
+                  {/* ULTRA-SMOOTH HEIGHT ANIMATION */}
+                  <div 
+                    className={`grid transition-all duration-500 ease-in-out ${
+                      isActive ? 'grid-rows-[1fr] opacity-100 mt-3' : 'grid-rows-[0fr] opacity-0'
+                    }`}
+                  >
+                    <div className="overflow-hidden">
+                      <p className="text-xs leading-relaxed font-light text-[var(--color-cmech-text)]/85">
+                        {slide.desc[lang]}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               );
             })}
@@ -172,26 +202,58 @@ const PhilosophySection = () => {
         </div>
 
         {/* LUXURY METRIC STRIP */}
-        <div className="border-t border-[var(--color-cmech-gold)]/15 pt-16 grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-          <div className="p-4 border-r border-white/5 last:border-none">
-            <div className="font-serif text-3xl sm:text-5xl text-[var(--color-cmech-gold)] font-light mb-2">0.8 <span className="text-sm font-sans">W/m²K</span></div>
-            <div className="text-[10px] uppercase tracking-[0.25em] text-[var(--color-cmech-text)]/60">{t.philosophy.metric1}</div>
+        <div className="border-t border-[var(--color-cmech-gold)]/15 pt-16 grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+          
+          <div className="p-6 rounded-lg bg-white/[0.02] border border-white/5 hover:border-[var(--color-cmech-gold)]/30 transition-all duration-500 hover:-translate-y-1 group">
+            <div className="font-serif text-3xl sm:text-5xl text-[var(--color-cmech-gold)] font-light mb-2 group-hover:scale-105 transition-transform duration-300">
+              0.8 <span className="text-xs font-sans text-white/60">W/m²K</span>
+            </div>
+            <div className="text-[10px] uppercase tracking-[0.25em] text-[var(--color-cmech-text)]/70 font-medium">
+              {t.philosophy?.metric1 || "TERMİK IZOLYATSIYA"}
+            </div>
           </div>
-          <div className="p-4 border-r border-white/5 last:border-none">
-            <div className="font-serif text-3xl sm:text-5xl text-[var(--color-cmech-gold)] font-light mb-2">48 <span className="text-sm font-sans">dB</span></div>
-            <div className="text-[10px] uppercase tracking-[0.25em] text-[var(--color-cmech-text)]/60">{t.philosophy.metric2}</div>
+
+          <div className="p-6 rounded-lg bg-white/[0.02] border border-white/5 hover:border-[var(--color-cmech-gold)]/30 transition-all duration-500 hover:-translate-y-1 group">
+            <div className="font-serif text-3xl sm:text-5xl text-[var(--color-cmech-gold)] font-light mb-2 group-hover:scale-105 transition-transform duration-300">
+              48 <span className="text-xs font-sans text-white/60">dB</span>
+            </div>
+            <div className="text-[10px] uppercase tracking-[0.25em] text-[var(--color-cmech-text)]/70 font-medium">
+              {t.philosophy?.metric2 || "AKUSTIK SHUMIZOLYATSIYA"}
+            </div>
           </div>
-          <div className="p-4 border-r border-white/5 last:border-none">
-            <div className="font-serif text-3xl sm:text-5xl text-[var(--color-cmech-gold)] font-light mb-2">Class 4</div>
-            <div className="text-[10px] uppercase tracking-[0.25em] text-[var(--color-cmech-text)]/60">{t.philosophy.metric3}</div>
+
+          <div className="p-6 rounded-lg bg-white/[0.02] border border-white/5 hover:border-[var(--color-cmech-gold)]/30 transition-all duration-500 hover:-translate-y-1 group">
+            <div className="font-serif text-3xl sm:text-5xl text-[var(--color-cmech-gold)] font-light mb-2 group-hover:scale-105 transition-transform duration-300">
+              Class 4
+            </div>
+            <div className="text-[10px] uppercase tracking-[0.25em] text-[var(--color-cmech-text)]/70 font-medium">
+              {t.philosophy?.metric3 || "GERMETIKLIK ZIRHI"}
+            </div>
           </div>
-          <div className="p-4">
-            <div className="font-serif text-3xl sm:text-5xl text-[var(--color-cmech-gold)] font-light mb-2">50+ <span className="text-sm font-sans">Years</span></div>
-            <div className="text-[10px] uppercase tracking-[0.25em] text-[var(--color-cmech-text)]/60">{t.philosophy.metric4}</div>
+
+          <div className="p-6 rounded-lg bg-white/[0.02] border border-white/5 hover:border-[var(--color-cmech-gold)]/30 transition-all duration-500 hover:-translate-y-1 group">
+            <div className="font-serif text-3xl sm:text-5xl text-[var(--color-cmech-gold)] font-light mb-2 group-hover:scale-105 transition-transform duration-300">
+              50+ <span className="text-xs font-sans text-white/60">Years</span>
+            </div>
+            <div className="text-[10px] uppercase tracking-[0.25em] text-[var(--color-cmech-text)]/70 font-medium">
+              {t.philosophy?.metric4 || "XIZMAT MUDDATI"}
+            </div>
           </div>
+
         </div>
 
       </div>
+
+      {/* INJECTED ANIMATIONS */}
+      <style jsx>{`
+        @keyframes progressBar {
+          0% { width: 0%; }
+          100% { width: 100%; }
+        }
+        .animate-progress {
+          animation: progressBar 5.5s linear forwards;
+        }
+      `}</style>
     </section>
   );
 };
