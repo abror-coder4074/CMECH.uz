@@ -82,7 +82,7 @@ const SystemsSection = () => {
     : systems.filter(s => s.category === activeCategory);
 
   return (
-    <section id="systems" className="relative py-28 bg-[var(--color-cmech-dark)] text-[var(--color-cmech-text)] border-t border-[var(--color-cmech-gold)]/10 overflow-hidden">
+    <section id="systems" className="relative py-28 bg-[var(--color-cmech-dark)] text-[var(--color-cmech-text)] border-t border-[var(--color-cmech-gold)]/10 overflow-hidden select-none">
       <div className="max-w-7xl mx-auto px-6">
         
         {/* HEADER */}
@@ -99,7 +99,7 @@ const SystemsSection = () => {
             </h2>
           </div>
 
-          {/* CATEGORY FILTER BUTTONS (RESPONSIVE GRID 2x2 FOR MOBILE, FLEX FOR DESKTOP) */}
+          {/* CATEGORY FILTER BUTTONS */}
           <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 bg-white/[0.03] p-1.5 border border-white/10 rounded-2xl sm:rounded-full w-full md:w-auto">
             {[
               { id: 'all', label: { uz: 'Barchasi', ru: 'Все', en: 'All' } },
@@ -110,10 +110,10 @@ const SystemsSection = () => {
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`text-xs uppercase tracking-[0.15em] text-center px-4 py-2.5 rounded-xl sm:rounded-full transition-all duration-300 w-full sm:w-auto ${
+                className={`text-xs uppercase tracking-[0.15em] text-center px-5 py-2.5 rounded-xl sm:rounded-full transition-all duration-300 w-full sm:w-auto ${
                   activeCategory === cat.id 
-                    ? 'bg-[var(--color-cmech-gold)] text-[var(--color-cmech-dark)] font-semibold shadow-lg' 
-                    : 'text-white/60 hover:text-white'
+                    ? 'bg-[var(--color-cmech-gold)] text-[var(--color-cmech-dark)] font-semibold shadow-lg shadow-[var(--color-cmech-gold)]/20 scale-105' 
+                    : 'text-white/60 hover:text-white hover:bg-white/5'
                 }`}
               >
                 {cat.label[lang]}
@@ -127,62 +127,68 @@ const SystemsSection = () => {
           {filteredSystems.map(item => (
             <div 
               key={item.id}
-              className="bg-white/[0.02] border border-[var(--color-cmech-gold)]/15 hover:border-[var(--color-cmech-gold)]/50 transition-all duration-500 rounded-sm overflow-hidden group flex flex-col justify-between"
+              className="bg-white/[0.02] border border-[var(--color-cmech-gold)]/15 hover:border-[var(--color-cmech-gold)]/60 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-[var(--color-cmech-gold)]/10 rounded-sm overflow-hidden group flex flex-col justify-between animate-fadeInCard"
             >
               <div>
-                {/* IMAGE */}
+                {/* IMAGE WITH HOVER ZOOM & GLOW */}
                 <div className="relative aspect-[16/10] overflow-hidden">
                   <img 
                     src={item.image} 
                     alt={item.title}
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 brightness-90"
+                    className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700 brightness-90 group-hover:brightness-100 ease-out"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-cmech-dark)] via-transparent to-transparent opacity-80" />
                 </div>
 
                 {/* CONTENT */}
                 <div className="p-7">
-                  <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--color-cmech-gold)] font-medium block mb-2">
+                  <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--color-cmech-gold)] font-medium block mb-2 font-mono">
                     {item.subtitle[lang]}
                   </span>
-                  <h3 className="font-serif text-2xl text-white font-normal mb-3">
+                  <h3 className="font-serif text-2xl text-white font-normal mb-3 group-hover:text-[var(--color-cmech-gold)] transition-colors duration-300">
                     {item.title}
                   </h3>
-                  <p className="text-xs text-[var(--color-cmech-text)]/70 leading-relaxed font-light mb-6">
+                  <p className="text-xs text-[var(--color-cmech-text)]/70 leading-relaxed font-light mb-6 line-clamp-3">
                     {item.desc[lang]}
                   </p>
 
                   {/* SPECS STRIP */}
                   <div className="grid grid-cols-3 gap-2 py-4 border-y border-white/10 text-center">
                     <div>
-                      <span className="block text-[10px] text-white/40 uppercase tracking-wider mb-1">
+                      <span className="block text-[10px] text-white/40 uppercase tracking-wider mb-1 font-mono">
                         {lang === 'uz' ? 'Profil' : lang === 'ru' ? 'Профиль' : 'Depth'}
                       </span>
-                      <span className="text-xs font-semibold text-white">{item.specs.depth}</span>
+                      <span className="text-xs font-semibold text-white font-mono">{item.specs.depth}</span>
                     </div>
                     <div>
-                      <span className="block text-[10px] text-white/40 uppercase tracking-wider mb-1">
+                      <span className="block text-[10px] text-white/40 uppercase tracking-wider mb-1 font-mono">
                         {lang === 'uz' ? 'Shisha' : lang === 'ru' ? 'Стекло' : 'Glass'}
                       </span>
-                      <span className="text-xs font-semibold text-white">{item.specs.glass}</span>
+                      <span className="text-xs font-semibold text-white font-mono">{item.specs.glass}</span>
                     </div>
                     <div>
-                      <span className="block text-[10px] text-white/40 uppercase tracking-wider mb-1">
+                      <span className="block text-[10px] text-white/40 uppercase tracking-wider mb-1 font-mono">
                         {lang === 'uz' ? 'Izolyatsiya' : lang === 'ru' ? 'Тепло' : 'Thermal'}
                       </span>
-                      <span className="text-xs font-semibold text-[var(--color-cmech-gold)]">{item.specs.thermal}</span>
+                      <span className="text-xs font-semibold text-[var(--color-cmech-gold)] font-mono">{item.specs.thermal}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* ACTION FOOTER */}
+              {/* ACTION FOOTER WITH SMOOTH FILL ANIMATION */}
               <div className="px-7 pb-7 pt-2">
                 <a 
                   href="#contact" 
-                  className="w-full inline-block text-center border border-[var(--color-cmech-gold)]/40 hover:border-[var(--color-cmech-gold)] hover:bg-[var(--color-cmech-gold)] hover:text-[var(--color-cmech-dark)] text-xs uppercase tracking-[0.2em] py-3 transition-all duration-300 font-medium rounded-sm"
+                  className="relative w-full inline-flex items-center justify-center overflow-hidden border border-[var(--color-cmech-gold)]/40 text-xs uppercase tracking-[0.2em] py-3.5 transition-all duration-300 font-medium rounded-sm text-[var(--color-cmech-text)] group/btn hover:border-[var(--color-cmech-gold)] hover:text-[var(--color-cmech-dark)]"
                 >
-                  {lang === 'uz' ? 'Loyiha Hisobi' : lang === 'ru' ? 'Расчет Проекта' : 'Request Quote'}
+                  <span className="absolute inset-0 bg-[var(--color-cmech-gold)] translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 ease-out -z-0" />
+                  <span className="relative z-10 flex items-center space-x-2">
+                    <span>{lang === 'uz' ? 'Loyiha Hisobi' : lang === 'ru' ? 'Расчет Проекта' : 'Request Quote'}</span>
+                    <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover/btn:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </span>
                 </a>
               </div>
 
@@ -191,6 +197,23 @@ const SystemsSection = () => {
         </div>
 
       </div>
+
+      {/* FILTER ANIMATION KEYFRAME */}
+      <style>{`
+        @keyframes fadeInCard {
+          from {
+            opacity: 0;
+            transform: translateY(12px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fadeInCard {
+          animation: fadeInCard 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+      `}</style>
     </section>
   );
 };

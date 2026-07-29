@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 
 const TechnologySection = () => {
@@ -8,6 +8,7 @@ const TechnologySection = () => {
   const lang = ['uz', 'ru', 'en'].includes(activeLang) ? activeLang : 'uz';
 
   const [activeTab, setActiveTab] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   const technologies = [
     {
@@ -99,8 +100,19 @@ const TechnologySection = () => {
     }
   ];
 
+  // AVTO O'TISH TAYMERI (5000ms = 5 soniya)
+  useEffect(() => {
+    if (isPaused) return;
+
+    const interval = setInterval(() => {
+      setActiveTab((prev) => (prev + 1) % technologies.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [isPaused, technologies.length]);
+
   return (
-    <section id="technology" className="relative py-28 bg-[#140F0D] text-[#E2D8CE] border-t border-[#E1931E]/10 overflow-hidden">
+    <section id="technology" className="relative py-28 bg-[#140F0D] text-[#E2D8CE] border-t border-[#E1931E]/10 overflow-hidden select-none">
       
       {/* BACKGROUND LUXURY GLOW EFFECTS */}
       <div className="absolute top-1/4 -left-32 w-96 h-96 bg-[#E1931E]/5 rounded-full blur-[120px] pointer-events-none" />
@@ -132,9 +144,13 @@ const TechnologySection = () => {
         </div>
 
         {/* MAIN FEATURE GRID */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        <div 
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
           
-          {/* NAVIGATION BUTTONS (LEFT 4 COLS) */}
+          {/* NAVIGATION BUTTONS (LEFT 5 COLS) */}
           <div className="lg:col-span-5 flex flex-col justify-between space-y-4">
             {technologies.map((item, index) => {
               const isSelected = activeTab === index;
@@ -163,16 +179,27 @@ const TechnologySection = () => {
                     </div>
                   </div>
 
-                  {/* ACTIVE INDICATOR BAR */}
-                  <div className={`absolute bottom-0 left-0 h-[2px] bg-[#E1931E] transition-all duration-500 ${isSelected ? 'w-full' : 'w-0'}`} />
+                  {/* ACTIVE PROGRESS BAR ANIMATION */}
+                  {isSelected && (
+                    <div className="absolute bottom-0 left-0 h-[2.5px] bg-[#231C16] w-full">
+                      <div 
+                        className="h-full bg-[#E1931E]" 
+                        style={{
+                          animation: isPaused ? 'none' : 'techProgress 5s linear infinite'
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
               );
             })}
           </div>
 
           {/* DISPLAY CARD (RIGHT 7 COLS) */}
-          <div className="lg:col-span-7 bg-[#1D1714] border border-[#E1931E]/20 rounded-3xl p-8 sm:p-12 flex flex-col justify-between relative overflow-hidden group shadow-2xl">
-            
+          <div 
+            key={activeTab} 
+            className="lg:col-span-7 bg-[#1D1714] border border-[#E1931E]/20 rounded-3xl p-8 sm:p-12 flex flex-col justify-between relative overflow-hidden group shadow-2xl animate-fadeIn"
+          >
             {/* Subtle Gradient Overlay */}
             <div className="absolute -top-24 -right-24 w-60 h-60 bg-[#E1931E]/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -218,6 +245,21 @@ const TechnologySection = () => {
         </div>
 
       </div>
+
+      {/* ANIMATION KEYFRAMES */}
+      <style>{`
+        @keyframes techProgress {
+          0% { width: 0%; }
+          100% { width: 100%; }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(6px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.4s ease-out forwards;
+        }
+      `}</style>
     </section>
   );
 };
